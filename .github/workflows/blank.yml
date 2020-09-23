@@ -21,11 +21,8 @@ jobs:
         with:
           args: zip -qq -r ./theme.zip ./theme
 
-      - uses: andstor/file-existence-action@v1
-        with:
-          files: "theme.zip" 
-
       - uses: actions/upload-artifact@v2
         with:
-          name: ./theme.zip
+          name: theme.zip
+          path: ./theme.zip
 
