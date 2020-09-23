@@ -16,9 +16,15 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        
       - uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r ./theme.zip ./theme
+
+      - uses: andstor/file-existence-action@v1
+        with:
+          files: "theme.zip" 
+
       - uses: actions/upload-artifact@v2
         with:
           name: ./theme.zip
