@@ -14,15 +14,14 @@ jobs:
   zip:
     runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         
-      - uses: montudor/action-zip@v0.1.0
-        with:
-          args: zip -qq -r ./theme.zip ./theme
+      # - uses: montudor/action-zip@v0.1.0
+      #   with:
+      #     args: zip -qq -r ./theme.zip ./theme
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: theme.zip
-          path: ./theme.zip
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: theme.zip
+      #     path: ./theme.zip
 
