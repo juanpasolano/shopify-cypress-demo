@@ -53,5 +53,5 @@ jobs:
         env:
           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip   
       - run: |
-          $output = '${{ steps.webhook.outputs }}'
+          $output = '${{ steps.webhook.outputs.output }}'
           echo $output
