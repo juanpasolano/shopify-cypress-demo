@@ -64,6 +64,7 @@ jobs:
           method: 'POST'
           body: '{"theme":{"name":"GitHubActionsTest - ${{steps.date.outputs.date}}","src":"${{env.FILE_PATH}}"}}'
           timeout: 6000
+          is_debug: true 
         env:
           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip    
       - name: 'Use response'
