@@ -46,7 +46,7 @@ jobs:
           method: POST
           payload: '{"theme":{"name":"GitHubActionsTest - ${{env.DATE}}","src":"${{env.FILE_PATH}}"}}'
         env:
-          DATE: (date +"%D %T %Z")
+          DATE: date::$(date +"%D %T %Z")
           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip   
       - run: |
           $output = '${{ steps.webhook.outputs }}' | ConvertFrom-Json
