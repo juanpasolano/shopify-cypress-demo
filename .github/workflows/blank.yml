@@ -14,7 +14,7 @@ jobs:
   zip:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+#       - uses: actions/checkout@v2
         
 #       - uses: montudor/action-zip@v0.1.0
 #         with:
@@ -44,8 +44,9 @@ jobs:
         with:
           url: https://${SHOPIFY_API_KEY}:${SHOPIFY_API_PASSWORD}@${SHOPIFY_URL}/admin/api/2019-04/themes.json
           method: POST
-          payload: '{"theme":{"name":"GitHubActionsTest - $(date +"%D %T %Z")","src":"$FILE_PATH"}}'
+          payload: '{"theme":{"name":"GitHubActionsTest - $DATE","src":"$FILE_PATH"}}'
         env:
+          DATE: (date +"%D %T %Z")
           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip   
       - run: |
           $output = '${{ steps.webhook.outputs }}' | ConvertFrom-Json
