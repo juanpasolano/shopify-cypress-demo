@@ -40,13 +40,16 @@ jobs:
 #           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip  
 #       - run: echo $(cat body.json)
 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      
       - uses: Satak/webrequest-action@v1.2.3
         with:
           url: https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes.json
           method: POST
-          payload: '{"theme":{"name":"GitHubActionsTest - ${{env.DATE}}","src":"${{env.FILE_PATH}}"}}'
+          payload: '{"theme":{"name":"GitHubActionsTest - ${{steps.date.outputs.date}}","src":"${{env.FILE_PATH}}"}}'
         env:
-          DATE: date::$(date +"%D %T %Z")
           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip   
       - run: |
           $output = '${{ steps.webhook.outputs }}' | ConvertFrom-Json
