@@ -20,10 +20,10 @@ jobs:
 #         with:
 #           args: zip -qq -r ./theme.zip ./theme
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: temptest.zip
-          path: ./temptest.zip
+#       - uses: actions/upload-artifact@v2
+#         with:
+#           name: temptest.zip
+#           path: ./temptest.zip
 
       - uses: zdurham/s3-upload-github-action@master
         with:
