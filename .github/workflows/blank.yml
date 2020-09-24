@@ -35,7 +35,7 @@ jobs:
 #           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: '"{\"theme\":{\"name\":\"GitlabCI Curl Test - $(date +"%D %T %Z")\",\"src\":\"$FILE_PATH\"}}" > body.json'
-        shell: bash
+#         shell: bash
         env:
           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip  
       - run: echo $(cat body.json)
