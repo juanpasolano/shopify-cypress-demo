@@ -54,4 +54,4 @@ jobs:
           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip   
       - run: |
           $output = '${{ steps.webhook.outputs.output }}' | ConvertFrom-Json
-          echo $output
+          echo "$($output.data.theme.id)"
