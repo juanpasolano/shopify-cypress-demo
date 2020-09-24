@@ -42,7 +42,7 @@ jobs:
 
       - uses: Satak/webrequest-action@v1.2.3
         with:
-          url: https://${SHOPIFY_API_KEY}:${SHOPIFY_API_PASSWORD}@${SHOPIFY_URL}/admin/api/2019-04/themes.json
+          url: https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes.json
           method: POST
           payload: '{"theme":{"name":"GitHubActionsTest - $DATE","src":"$FILE_PATH"}}'
         env:
