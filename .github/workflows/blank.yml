@@ -44,28 +44,19 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%D %T %Z')"
       
-#       - uses: Satak/webrequest-action@v1.2.3
-#         id: webhook
-#         with:
-#           url: https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes.json
-#           method: POST
-#           payload: '{"theme":{"name":"GitHubActionsTest - ${{steps.date.outputs.date}}","src":"${{env.FILE_PATH}}"}}'
-#         env:
-#           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip   
-#       - run: |
-#           $output = '${{ steps.webhook.outputs.output }}' | ConvertFrom-Json
-#           echo "$($output.data.theme.id)"
-
-      - name: 'Call API'
-        uses: indiesdev/curl@v1
-        id: api
+      - uses: Satak/webrequest-action@v1.2.3
+        id: webhook
         with:
           url: https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes.json
           method: POST
-          body: '{"theme":{"name":"CypressTest - ${{steps.date.outputs.date}}","src":"${{env.FILE_PATH}}"}}'
-          timeout: 6000
-          is_debug: true 
+          payload: '{"theme":{"name":"GitHubActionsTest - ${{steps.date.outputs.date}}","src":"${{env.FILE_PATH}}"}}'
         env:
-          FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip    
-      - name: 'Use response'
-        run: echo ${{ steps.api.outputs.response }}
+          FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip   
+      - run: echo "${{ steps.webhook.outputs.output }}"
+          
+      - id: data
+        uses: gr2m/get-json-paths-action@v1.x
+        with:
+          json: ${{ steps.webhook.outputs.output }}
+          theme_id: "data.theme.id"
+      - run: "echo latest release: ${{ steps.data.outputs.theme_id }} 
