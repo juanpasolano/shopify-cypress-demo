@@ -18,32 +18,25 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%m-%d-%y-%T')"
         
-      - uses: actions/checkout@v2
+#       - uses: actions/checkout@v2
         
-      - uses: montudor/action-zip@v0.1.0
-        with:
-          args: zip -qq -r ./theme-${{steps.date.outputs.date}}.zip ./theme
-
-#       - uses: actions/upload-artifact@v2
+#       - uses: montudor/action-zip@v0.1.0
 #         with:
-#           name: temptest.zip
-#           path: ./temptest.zip
+#           args: zip -qq -r ./theme-${{steps.date.outputs.date}}.zip ./theme
 
 #       - uses: zdurham/s3-upload-github-action@master
 #         with:
 #          args: --acl public-read
 #         env:
-#           FILE: ./temptest.zip
+#           FILE: ./theme-${{steps.date.outputs.date}}.zip
 #           AWS_REGION: 'us-east-1'
 #           S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
 #           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-#       - run: echo -n -e "{\"theme\":{\"name\":\"GitHubActionsTest - $(date +"%D %T %Z")\",\"src\":\"$FILE_PATH\"}}" > body.json
-#         env:
-#           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip  
-#       - run: echo $(cat body.json)
-
+  
+      - name: Aws file name
+        id: zip_url
+        run: echo "::set-output name=url::https://${{ secrets.AWS_S3_BUCKET }}.s3.amazonaws.com/theme-${{steps.date.outputs.date}}.zip "
 
 
 
