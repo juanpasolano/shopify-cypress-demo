@@ -59,5 +59,10 @@ jobs:
           json: ${{ steps.webhook.outputs.output }}
           theme_id: "data.theme.id"
       - run: echo "${{ steps.data.outputs.theme_id }}"
-      - run: |
-          while [ $(curl https://${SHOPIFY_API_KEY}:${SHOPIFY_API_PASSWORD}@${SHOPIFY_URL}/admin/api/2019-04/themes/$TEST_THEME_ID.json | jq -r '.theme.previewable') != 'true' ]; do echo 'Waiting for theme'; sleep 2; done 
+      - id: check_theme
+        run: |
+          while [ $(curl https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes/${{ steps.data.outputs.theme_id }}.json | jq -r '.theme.previewable') != 'true' ]; do echo 'Waiting for theme'; sleep 2; done 
+          echo "::set-output name=THEME_READY::true"
+      - name: The theme is ready
+        run: echo "theme is ready!!!!!!"
+        if: ${{ steps.check_theme.outputs.THEME_READY }}
