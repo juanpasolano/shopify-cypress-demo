@@ -51,8 +51,7 @@ jobs:
           method: POST
           payload: '{"theme":{"name":"GitHubActionsTest - ${{steps.date.outputs.date}}","src":"${{env.FILE_PATH}}"}}'
         env:
-          FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip   
-      - run: echo "${{ steps.webhook.outputs.output }}"
+          FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip 
           
       - id: data
         uses: gr2m/get-json-paths-action@v1.x
