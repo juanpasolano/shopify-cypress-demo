@@ -18,21 +18,21 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%m-%d-%y-%T')"
         
-#       - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         
-#       - uses: montudor/action-zip@v0.1.0
-#         with:
-#           args: zip -qq -r ./theme-${{steps.date.outputs.date}}.zip ./theme
+      - uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r ./theme-${{steps.date.outputs.date}}.zip ./theme
 
-#       - uses: zdurham/s3-upload-github-action@master
-#         with:
-#          args: --acl public-read
-#         env:
-#           FILE: ./theme-${{steps.date.outputs.date}}.zip
-#           AWS_REGION: 'us-east-1'
-#           S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - uses: zdurham/s3-upload-github-action@master
+        with:
+         args: --acl public-read
+        env:
+          FILE: ./theme-${{steps.date.outputs.date}}.zip
+          AWS_REGION: 'us-east-1'
+          S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   
       - name: Aws file name
         id: zip_url
@@ -40,33 +40,30 @@ jobs:
         
       - run: echo "${{steps.zip_url.outputs.url}}" 
 
-
-
-#       - name: download jq for parsing json
-#         run: echo "curl -sO http://stedolan.github.io/jq/download/linux64/jq"
+      - name: download jq for parsing json
+        run: echo "curl -sO http://stedolan.github.io/jq/download/linux64/jq"
       
-#       - name: Create a new theme
-#         uses: Satak/webrequest-action@v1.2.3
-#         id: webhook
-#         with:
-#           url: https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes.json
-#           method: POST
-#           payload: '{"theme":{"name":"GitHubActionsTest - ${{steps.date.outputs.date}}","src":"${{env.FILE_PATH}}"}}'
-#         env:
-#           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip 
+      - name: Create a new theme
+        uses: Satak/webrequest-action@v1.2.3
+        id: webhook
+        with:
+          url: https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes.json
+          method: POST
+          payload: '{"theme":{"name":"GitHubActionsTest - ${{steps.date.outputs.date}}","src":"${{steps.zip_url.outputs.url}}"}}'
           
-#       - name: Parse new theme response
-#         id: theme
-#         uses: gr2m/get-json-paths-action@v1.x
-#         with:
-#           json: ${{ steps.webhook.outputs.output }}
-#           theme_id: "data.theme.id"
+      - name: Parse new theme response
+        id: theme
+        uses: gr2m/get-json-paths-action@v1.x
+        with:
+          json: ${{ steps.webhook.outputs.output }}
+          theme_id: "data.theme.id"
   
-#       - name: Check that theme is ready
-#         id: check_theme
-#         run: |
-#           while [ $(curl https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes/${{ steps.theme.outputs.theme_id }}.json | jq -r '.theme.previewable') != 'true' ]; do echo 'Waiting for theme'; sleep 2; done 
-#           echo "::set-output name=THEME_READY::true"
-#       - name: The theme is ready
-#         run: echo "theme is ready!!!!!!"
-#         if: ${{ steps.check_theme.outputs.THEME_READY }}
+      - name: Check that theme is ready
+        id: check_theme
+        run: |
+          while [ $(curl https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes/${{ steps.theme.outputs.theme_id }}.json | jq -r '.theme.previewable') != 'true' ]; do echo 'Waiting for theme'; sleep 2; done 
+          echo "::set-output name=THEME_READY::true"
+          
+      - name: The theme is ready
+        run: echo "theme is ready!!!!!!"
+        if: ${{ steps.check_theme.outputs.THEME_READY }}
