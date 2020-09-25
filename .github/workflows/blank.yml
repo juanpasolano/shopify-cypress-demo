@@ -14,11 +14,15 @@ jobs:
   zip:
     runs-on: ubuntu-latest
     steps:
-#       - uses: actions/checkout@v2
+      - name: Set current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%D%T')"
         
-#       - uses: montudor/action-zip@v0.1.0
-#         with:
-#           args: zip -qq -r ./theme.zip ./theme
+      - uses: actions/checkout@v2
+        
+      - uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r ./theme-${{steps.date.outputs.date}}.zip ./theme
 
 #       - uses: actions/upload-artifact@v2
 #         with:
@@ -39,35 +43,35 @@ jobs:
 #         env:
 #           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip  
 #       - run: echo $(cat body.json)
-      - name: download jq for parsing json
-        run: echo "curl -sO http://stedolan.github.io/jq/download/linux64/jq"
-        
-      - name: Set current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%D %T %Z')"
+
+
+
+
+#       - name: download jq for parsing json
+#         run: echo "curl -sO http://stedolan.github.io/jq/download/linux64/jq"
       
-      - name: Create a new theme
-        uses: Satak/webrequest-action@v1.2.3
-        id: webhook
-        with:
-          url: https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes.json
-          method: POST
-          payload: '{"theme":{"name":"GitHubActionsTest - ${{steps.date.outputs.date}}","src":"${{env.FILE_PATH}}"}}'
-        env:
-          FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip 
+#       - name: Create a new theme
+#         uses: Satak/webrequest-action@v1.2.3
+#         id: webhook
+#         with:
+#           url: https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes.json
+#           method: POST
+#           payload: '{"theme":{"name":"GitHubActionsTest - ${{steps.date.outputs.date}}","src":"${{env.FILE_PATH}}"}}'
+#         env:
+#           FILE_PATH: https://shopify-cypress-demo.s3.amazonaws.com/temptest.zip 
           
-      - name: Parse new theme response
-        id: theme
-        uses: gr2m/get-json-paths-action@v1.x
-        with:
-          json: ${{ steps.webhook.outputs.output }}
-          theme_id: "data.theme.id"
+#       - name: Parse new theme response
+#         id: theme
+#         uses: gr2m/get-json-paths-action@v1.x
+#         with:
+#           json: ${{ steps.webhook.outputs.output }}
+#           theme_id: "data.theme.id"
   
-      - name: Check that theme is ready
-        id: check_theme
-        run: |
-          while [ $(curl https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes/${{ steps.theme.outputs.theme_id }}.json | jq -r '.theme.previewable') != 'true' ]; do echo 'Waiting for theme'; sleep 2; done 
-          echo "::set-output name=THEME_READY::true"
-      - name: The theme is ready
-        run: echo "theme is ready!!!!!!"
-        if: ${{ steps.check_theme.outputs.THEME_READY }}
+#       - name: Check that theme is ready
+#         id: check_theme
+#         run: |
+#           while [ $(curl https://${{secrets.SHOPIFY_API_KEY}}:${{secrets.SHOPIFY_API_PASSWORD}}@${{secrets.SHOPIFY_URL}}/admin/api/2019-04/themes/${{ steps.theme.outputs.theme_id }}.json | jq -r '.theme.previewable') != 'true' ]; do echo 'Waiting for theme'; sleep 2; done 
+#           echo "::set-output name=THEME_READY::true"
+#       - name: The theme is ready
+#         run: echo "theme is ready!!!!!!"
+#         if: ${{ steps.check_theme.outputs.THEME_READY }}
