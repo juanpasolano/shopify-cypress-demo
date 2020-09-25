@@ -59,4 +59,4 @@ jobs:
         with:
           json: ${{ steps.webhook.outputs.output }}
           theme_id: "data.theme.id"
-      - run: "echo latest release: ${{ steps.data.outputs.theme_id }} 
+      - run: echo "${{ steps.data.outputs.theme_id }}"
