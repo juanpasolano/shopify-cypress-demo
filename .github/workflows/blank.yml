@@ -1,9 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [ master ]
@@ -20,11 +16,13 @@ jobs:
         
       - uses: actions/checkout@v2
         
-      - uses: montudor/action-zip@v0.1.0
+      - name: Create zip from theme folder
+        uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r ./theme-${{steps.date.outputs.date}}.zip ./theme
 
-      - uses: zdurham/s3-upload-github-action@master
+      - name: Upload file to AWS
+        uses: zdurham/s3-upload-github-action@master
         with:
          args: --acl public-read
         env:
@@ -34,7 +32,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   
-      - name: Aws file name
+      - name: AWS file name
         id: zip_url
         run: echo "::set-output name=url::https://${{ secrets.AWS_S3_BUCKET }}.s3.amazonaws.com/theme-${{steps.date.outputs.date}}.zip"
         
