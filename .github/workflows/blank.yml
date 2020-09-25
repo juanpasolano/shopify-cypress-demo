@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Set current date
         id: date
-        run: echo "::set-output name=date::$(date +'%D%T')"
+        run: echo "::set-output name=date::$(date +'%m-%d-%y-%T')"
         
       - uses: actions/checkout@v2
         
