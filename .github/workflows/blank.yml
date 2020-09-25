@@ -37,6 +37,8 @@ jobs:
       - name: Aws file name
         id: zip_url
         run: echo "::set-output name=url::https://${{ secrets.AWS_S3_BUCKET }}.s3.amazonaws.com/theme-${{steps.date.outputs.date}}.zip "
+        
+      - run: echo "${{steps.zip_url.outputs.url}}" 
 
 
 
